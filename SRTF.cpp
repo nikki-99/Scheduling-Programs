@@ -13,6 +13,7 @@ struct pinfo
     int CT;
     int TAT;
     int WT;
+    int RT;
 };
 
 int main()
@@ -23,8 +24,8 @@ int main()
     int is_completed[100];
     memset(is_completed, 0, sizeof(is_completed));
     int burst_remaining[100];
-    int total_TAT, total_WT, schedule_length;
-    float avg_TAT, avg_WT;
+    int total_TAT, total_WT, total_RT;
+    float avg_TAT, avg_WT, avg_RT;
     int current_time = 0;
     int completed = 0;
     int j = 1;
@@ -88,9 +89,11 @@ int main()
 
                 info[index].TAT = info[index].CT - info[index].AT;
                 info[index].WT = info[index].TAT - info[index].BT;
+                info[index].RT = info[index].ST - info[index].AT;
 
                 total_TAT += info[index].TAT;
                 total_WT += info[index].WT;
+                total_RT += info[index].RT;
 
                 is_completed[index] = 1;
                 completed++;
@@ -103,6 +106,8 @@ int main()
     }
     avg_TAT = total_TAT / float(n);
     avg_WT = total_WT / float(n);
+
+    avg_RT = total_RT / float(n);
     int min_AT = 100000, max_CT = -999;
     for (int i = 0; i < n; i++)
     {
@@ -116,12 +121,13 @@ int main()
         }
     }
 
-    cout << "id" << '\t' << "AT" << '\t' << "BT" << '\t' << "CT" << '\t' << "TAT" << '\t' << "WT\n";
+    cout << "id" << '\t' << "AT" << '\t' << "BT" << '\t' << "CT" << '\t' << "TAT" << '\t' << "WT" << '\t' << "RT\n";
     for (int i = 0; i < n; i++)
     {
-        cout << info[i].id << '\t' << info[i].AT << '\t' << info[i].BT << '\t' << info[i].CT << '\t' << info[i].TAT << '\t' << info[i].WT << '\n';
+        cout << info[i].id << '\t' << info[i].AT << '\t' << info[i].BT << '\t' << info[i].CT << '\t' << info[i].TAT << '\t' << info[i].WT << '\t' << info[i].RT << '\n';
     }
     cout << "Average Turn Around Time: " << avg_TAT << '\n'
          << "Average Waiting Time: " << avg_WT << '\n'
+         << "Average Response Time: " << avg_RT << '\n'
          << "Schedule Length: " << max_CT - min_AT;
 }

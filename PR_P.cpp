@@ -9,6 +9,7 @@ struct pinfo
     int id;
     int AT;
     int BT;
+    int PR;
     int ST;
     int CT;
     int TAT;
@@ -21,6 +22,14 @@ int main()
     int n;
     cout << "Enter number of Processes: ";
     cin >> n;
+    int is_completed[100];
+    memset(is_completed, 0, sizeof(is_completed));
+    int burst_remaining[100];
+    int total_TAT, total_WT, total_RT;
+    float avg_TAT, avg_WT, avg_RT;
+    int current_time = 0;
+    int completed = 0;
+
     pinfo info[n];
     for (int i = 0; i < n; i++)
     {
@@ -37,34 +46,34 @@ int main()
     {
 
         cin >> info[i].BT;
+        burst_remaining[i] = info[i].BT;
+    }
+    cout << "Enter Priority for processes: " << endl;
+    for (int i = 0; i < n; i++)
+    {
+
+        cin >> info[i].PR;
     }
 
-    int is_completed[100];
-    memset(is_completed, 0, sizeof(is_completed));
-    int total_TAT, total_WT, total_RT;
-    float avg_TAT, avg_WT, avg_RT;
-    int current_time = 0;
-    int completed = 0;
-    int j = 1;
     while (completed != n)
     {
         int index = -1;
-        int mn = 1000000;
+        int mn = 100000;
         for (int i = 0; i < n; i++)
         {
             if (info[i].AT <= current_time && is_completed[i] == 0)
             {
-                if (info[i].BT < mn)
+                if (info[i].PR < mn)
                 {
-                    mn = info[i].BT;
+                    mn = info[i].PR;
                     index = i;
                 }
             }
-            if (info[i].BT == mn)
+            if (info[i].PR == mn)
             {
                 if (info[i].AT < info[index].AT)
                 {
-                    mn = info[i].BT;
+                    mn = info[i].PR;
                     index = i;
                 }
             }
@@ -73,24 +82,29 @@ int main()
         if (index != -1)
 
         {
+            if (burst_remaining[index] == info[index].BT)
+            {
 
-            info[index].id = j;
-            info[index].ST = current_time;
+                info[index].ST = current_time;
+            }
+            burst_remaining[index] = burst_remaining[index] - 1;
+            current_time = current_time + 1;
+            if (burst_remaining[index] == 0)
+            {
 
-            info[index].CT = info[index].ST + info[index].BT;
+                info[index].CT = current_time;
 
-            info[index].TAT = info[index].CT - info[index].AT;
-            info[index].WT = info[index].TAT - info[index].BT;
-            info[index].RT = info[index].ST - info[index].AT;
+                info[index].TAT = info[index].CT - info[index].AT;
+                info[index].WT = info[index].TAT - info[index].BT;
+                info[index].RT = info[index].ST - info[index].AT;
 
-            total_TAT += info[index].TAT;
-            total_WT += info[index].WT;
-            total_RT += info[index].RT;
+                total_TAT += info[index].TAT;
+                total_WT += info[index].WT;
+                total_RT += info[index].RT;
 
-            is_completed[index] = 1;
-            completed++;
-            current_time = info[index].CT;
-            j++;
+                is_completed[index] = 1;
+                completed++;
+            }
         }
         else
         {
@@ -100,7 +114,6 @@ int main()
     avg_TAT = total_TAT / float(n);
     avg_WT = total_WT / float(n);
     avg_RT = total_RT / float(n);
-
     int min_AT = 100000, max_CT = -999;
     for (int i = 0; i < n; i++)
     {
@@ -114,10 +127,10 @@ int main()
         }
     }
 
-    cout << "id" << '\t' << "AT" << '\t' << "BT" << '\t' << "CT" << '\t' << "TAT" << '\t' << "WT" << '\t' << "RT\n";
+    cout << "id" << '\t' << "AT" << '\t' << "BT" << '\t' << "PR" << '\t' << "CT" << '\t' << "TAT" << '\t' << "WT" << '\t' << "RT\n";
     for (int i = 0; i < n; i++)
     {
-        cout << info[i].id << '\t' << info[i].AT << '\t' << info[i].BT << '\t' << info[i].CT << '\t' << info[i].TAT << '\t' << info[i].WT << '\t' << info[i].RT << '\n';
+        cout << info[i].id << '\t' << info[i].AT << '\t' << info[i].BT << '\t' << info[i].PR << '\t' << info[i].CT << '\t' << info[i].TAT << '\t' << info[i].WT << '\t' << info[i].RT << '\n';
     }
     cout << "Average Turn Around Time: " << avg_TAT << '\n'
          << "Average Waiting Time: " << avg_WT << '\n'

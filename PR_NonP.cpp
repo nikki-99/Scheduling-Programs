@@ -9,6 +9,7 @@ struct pinfo
     int id;
     int AT;
     int BT;
+    int PR;
     int ST;
     int CT;
     int TAT;
@@ -38,6 +39,12 @@ int main()
 
         cin >> info[i].BT;
     }
+    cout << "Enter Priority for processes: " << endl;
+    for (int i = 0; i < n; i++)
+    {
+
+        cin >> info[i].PR;
+    }
 
     int is_completed[100];
     memset(is_completed, 0, sizeof(is_completed));
@@ -54,17 +61,17 @@ int main()
         {
             if (info[i].AT <= current_time && is_completed[i] == 0)
             {
-                if (info[i].BT < mn)
+                if (info[i].PR < mn)
                 {
-                    mn = info[i].BT;
+                    mn = info[i].PR;
                     index = i;
                 }
             }
-            if (info[i].BT == mn)
+            if (info[i].PR == mn)
             {
                 if (info[i].AT < info[index].AT)
                 {
-                    mn = info[i].BT;
+                    mn = info[i].PR;
                     index = i;
                 }
             }
@@ -100,7 +107,6 @@ int main()
     avg_TAT = total_TAT / float(n);
     avg_WT = total_WT / float(n);
     avg_RT = total_RT / float(n);
-
     int min_AT = 100000, max_CT = -999;
     for (int i = 0; i < n; i++)
     {
@@ -113,7 +119,6 @@ int main()
             max_CT = info[i].CT;
         }
     }
-
     cout << "id" << '\t' << "AT" << '\t' << "BT" << '\t' << "CT" << '\t' << "TAT" << '\t' << "WT" << '\t' << "RT\n";
     for (int i = 0; i < n; i++)
     {
