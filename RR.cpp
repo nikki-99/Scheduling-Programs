@@ -1,6 +1,5 @@
 #include <iostream>
 #include <algorithm>
-
 using namespace std;
 struct node
 {
@@ -31,9 +30,31 @@ bool atimeSort(node a, node b)
     return a.atime < b.atime;
 }
 int k = 0, f = 0, r = 0;
-void disp(int nop, int qt)
+
+int main()
 {
-    int n = nop, q;
+    int n, choice, i, qt;
+    cout << "Enter number of processes\n";
+    cin >> n;
+
+    for (i = 0; i < n; i++)
+    {
+        cout << "Enter  arrival time for process p" << i + 1 << ":";
+
+        cin >> a[i].atime;
+        a[i].pname = i + 1;
+        a[i].wtime = -a[i].atime;
+    }
+    for (i = 0; i < n; i++)
+    {
+        cout << "Enter  burst time for process p" << i + 1 << ":";
+
+        cin >> a[i].btime;
+    }
+    cout << "Enter time quantum\n";
+    cin >> qt;
+
+    int n, q;
     sort(a, a + n, atimeSort);
     int ttime = 0, i;
     int j, tArray[n];
@@ -147,16 +168,14 @@ void disp(int nop, int qt)
     cout << "\n";
 
     cout << "P.Name  AT\tBT\tCT\tTAT\tWT\tRT\n";
-    for (i = 0; i < 6 && i < nop && a[i].pname != 'i'; i++)
+    for (i = 0; i < 6 && i < n && a[i].pname != 'i'; i++)
     {
         if (a[i].pname == '\0')
             break;
-        cout << "Hello";
         cout << a[i].pname << "\t";
         cout << a[i].atime << "\t";
         cout << a[i].btime << "\t";
         cout << a[i].ctime << "\t";
-
         cout << a[i].wtime + a[i].ctime - rtime + a[i].btime << "\t";
         averageTAT += a[i].wtime + a[i].ctime - rtime + a[i].btime;
         cout << a[i].wtime + a[i].ctime - rtime << "\t";
@@ -168,30 +187,4 @@ void disp(int nop, int qt)
     cout << "Average Response time: " << (float)averageResponseTime / (float)n << endl;
     cout << "Average Waiting time: " << (float)averageWaitingTime / (float)n << endl;
     cout << "Average TA time: " << (float)averageTAT / (float)n << endl;
-}
-int main()
-{
-    int n, choice, i, qt;
-    cout << "Enter number of processes\n";
-    cin >> n;
-
-    for (i = 0; i < n; i++)
-    {
-        cout << "Enter  arrival time for process p" << i + 1 << ":";
-
-        cin >> a[i].atime;
-        a[i].pname = i + 1;
-        a[i].wtime = -a[i].atime;
-    }
-    for (i = 0; i < n; i++)
-    {
-        cout << "Enter  burst time for process p" << i + 1 << ":";
-
-        cin >> a[i].btime;
-    }
-    cout << "Enter time quantum\n";
-    cin >> qt;
-
-    disp(n, qt);
-    return 0;
 }
