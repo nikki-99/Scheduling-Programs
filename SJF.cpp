@@ -41,7 +41,7 @@ int main()
 
     int is_completed[100];
     memset(is_completed, 0, sizeof(is_completed));
-    int total_TAT, total_WT, total_RT;
+    int total_TAT = 0, total_WT = 0, total_RT = 0;
     float avg_TAT, avg_WT, avg_RT;
     int current_time = 0;
     int completed = 0;
@@ -97,6 +97,7 @@ int main()
             current_time++;
         }
     }
+    cout << total_RT << total_WT;
     avg_TAT = total_TAT / float(n);
     avg_WT = total_WT / float(n);
     avg_RT = total_RT / float(n);
@@ -117,7 +118,7 @@ int main()
     cout << "id" << '\t' << "AT" << '\t' << "BT" << '\t' << "CT" << '\t' << "TAT" << '\t' << "WT" << '\t' << "RT\n";
     for (int i = 0; i < n; i++)
     {
-        cout << info[i].id << '\t' << info[i].AT << '\t' << info[i].BT << '\t' << info[i].CT << '\t' << info[i].TAT << '\t' << info[i].WT << '\t' << info[i].RT << '\n';
+        cout << i + 1 << '\t' << info[i].AT << '\t' << info[i].BT << '\t' << info[i].CT << '\t' << info[i].TAT << '\t' << info[i].WT << '\t' << info[i].RT << '\n';
     }
     cout << "Average Turn Around Time: " << avg_TAT << '\n'
          << "Average Waiting Time: " << avg_WT << '\n'
